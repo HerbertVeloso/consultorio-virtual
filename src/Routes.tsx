@@ -1,6 +1,6 @@
 import { Route, Routes as PrimitiveRoutes } from 'react-router-dom';
-import { Layout } from './components/Layout';
 
+import { Layout } from './components/Layout';
 import { PrivateRoute } from './components/PrivateRoute';
 
 import { Consultations } from './pages/Consultations';
