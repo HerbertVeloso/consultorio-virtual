@@ -1,75 +1,66 @@
-import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { AddNoteButton } from '../../components/AddNoteButton';
 import { NotesList } from '../../components/NotesList';
+import { PageHeader } from '../../components/PageHeader';
 import { useAuth } from '../../hooks/useAuth';
-import { database } from '../../services/firebase';
+import NotesService from '../../services/NotesService';
 import { Note } from '../../types/Note';
-import { Container, Title } from './styles';
+import { Container } from './styles';
 
 export function Notes() {
   const { user } = useAuth();
-  const notesRef = collection(database, 'users', user.id, 'notes');
 
   const [notes, setNotes] = useState<Note[]>([]);
   const [isLoading, setisLoading] = useState(true);
 
   useEffect(() => {
-    console.log('Buscou no banco');
-
     (async () => {
+      setisLoading(true);
       try {
-        setisLoading(true);
-        const querySnapshot = await getDocs(notesRef);
-        const notesFormatted: Note[] = [];
-
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-
-          notesFormatted.push({
-            id: doc.id,
-            title: data.title,
-            description: data.description,
-            completed: data.completed ?? false,
-            createdAt: data.created_at.toDate(),
-          });
-        });
-
-        notesFormatted.sort((a, b) =>
-          a.createdAt < b.createdAt ? 1 : a.createdAt > b.createdAt ? -1 : 0
-        );
-
-        setNotes(notesFormatted);
+        const notesList = await NotesService.listNotes(user.id);
+        setNotes(notesList);
       } catch {
         toast.error('Houve um erro ao buscar as anotações. Tente novamente mais tarde.');
       } finally {
         setisLoading(false);
       }
-
     })();
   }, []);
 
+  function onCreateNote(note: Note) {
+    setNotes(prevState => [note, ...prevState]);
+  }
+
   async function toggleNoteCompleted(note: Note) {
-    try {
-      const noteRef = doc(database, 'users', user.id, 'notes', note.id);
-      await updateDoc(noteRef, { completed: !note.completed });
+    const newStatus = !note.completed;
 
-      const updatedNotes = notes.map((item) =>
-        item.id === note.id ? { ...item, completed: !note.completed } : item
-      );
+    const updatedNotes = notes.map((item) =>
+      item.id === note.id ? { ...item, completed: newStatus } : item
+    );
+    setNotes(updatedNotes);
 
-      setNotes(updatedNotes);
-    } catch {
+    const response = await NotesService.updateCompleted(user.id, note.id, newStatus);
+
+    if (response instanceof Error) {
       toast.error('Erro ao atualizar o status da anotação');
+      const updatedNotes = notes.map((item) =>
+        item.id === note.id ? { ...item, completed: !newStatus } : item
+      );
+      setNotes(updatedNotes);
     }
   }
 
   return (
     <>
-      <Title>Anotações</Title>
+      <PageHeader title='Anotações'      >
+        <AddNoteButton onCreate={onCreateNote} />
+      </PageHeader>
       <Container>
         <NotesList notes={notes} isLoading={isLoading} toggleNoteCompleted={toggleNoteCompleted} />
       </Container>
+
+
     </>
   );
 }

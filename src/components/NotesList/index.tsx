@@ -1,4 +1,4 @@
-import { Eye, Trash } from 'phosphor-react';
+import { Eye, Pencil, Trash } from 'phosphor-react';
 import { Note } from '../../types/Note';
 import { Loader } from '../Loader';
 import { EmptyText, List, Title } from './styles';
@@ -35,6 +35,7 @@ export function NotesList({ notes, isLoading, toggleNoteCompleted }: NoteListPro
 
                     <div>
                       <Eye weight='bold' />
+                      <Pencil weight="bold" />
                       <Trash weight='bold' />
                     </div>
                   </li>

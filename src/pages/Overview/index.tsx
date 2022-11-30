@@ -1,5 +1,9 @@
+import { PageHeader } from '../../components/PageHeader';
+
 export function Overview() {
   return (
-    <h1>Dashboard</h1>
+    <>
+      <PageHeader title='Resumo' />
+    </>
   );
 }

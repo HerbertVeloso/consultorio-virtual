@@ -1,5 +1,12 @@
+import { PageHeader } from '../../components/PageHeader';
+
 export function Surgeries() {
   return (
-    <h1>Cirurgias</h1>
+    <>
+      <PageHeader
+        title='Cirurgias'
+
+      />
+    </>
   );
 }

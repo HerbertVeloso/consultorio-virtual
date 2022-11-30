@@ -14,10 +14,10 @@ export function Navigation() {
 
   const navLinks = [
     { to: '/dashboard', label: 'Resumo', icon: <ChartIcon /> },
-    { to: '/dashboard/patients', label: 'Pacientes', icon: <PatientIcon /> },
-    { to: '/dashboard/consultations', label: 'Consultas', icon: <ConsultationIcon /> },
-    { to: '/dashboard/surgeries', label: 'Cirurgias', icon: <SurgeryIcon /> },
-    { to: '/dashboard/notes', label: 'Anotações', icon: <NoteIcon /> },
+    { to: 'patients', label: 'Pacientes', icon: <PatientIcon /> },
+    { to: 'consultations', label: 'Consultas', icon: <ConsultationIcon /> },
+    { to: 'surgeries', label: 'Cirurgias', icon: <SurgeryIcon /> },
+    { to: 'notes', label: 'Anotações', icon: <NoteIcon /> },
   ];
 
   return (

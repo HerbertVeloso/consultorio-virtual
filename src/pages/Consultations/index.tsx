@@ -1,5 +1,12 @@
+import { PageHeader } from '../../components/PageHeader';
+
 export function Consultations() {
   return (
-    <h1>Consultas</h1>
+    <>
+      <PageHeader
+        title='Consultas'
+
+      />
+    </>
   );
 }
