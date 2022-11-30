@@ -5,7 +5,7 @@ export const Overlay = styled.div`
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.6);
-  position: absolute;
+  position: fixed;
   inset: 0;
   z-index: 99;
 
@@ -25,5 +25,21 @@ export const Container = styled.div`
 
 export const Title = styled.h2`
   color: ${({ theme }) => theme.colors.black};
+  margin-bottom: 1.5rem;
+`;
 
+
+export const Actions = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 2rem;
+
+  .cancel-button {
+    margin-right: 1.5rem;
+    border: none;
+    background-color: transparent;
+    font-size: 1rem;
+
+  }
 `;

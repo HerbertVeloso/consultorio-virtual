@@ -1,8 +1,9 @@
 /* eslint @typescript-eslint/no-non-null-assertion: 0 */
 import { ReactNode } from 'react';
 import ReactDOM from 'react-dom';
+import { Button } from '../Button';
 
-import { Container, Overlay, Title } from './styles';
+import { Actions, Container, Overlay, Title } from './styles';
 
 interface ModalProps {
   title: string;
@@ -41,10 +42,16 @@ export function Modal({
       <Container>
         <Title>{title}</Title>
         {children}
-        <div>
-          <button onClick={onCancel}>{cancelLabel}</button>
-          <button onClick={onConfirm}>{confirmLabel}</button>
-        </div>
+        <Actions>
+          <button
+            className='cancel-button'
+            type='button'
+            onClick={onCancel}
+          >
+            {cancelLabel}
+          </button>
+          <Button onClick={onConfirm}>{confirmLabel}</Button>
+        </Actions>
       </Container>
     </Overlay>,
     container

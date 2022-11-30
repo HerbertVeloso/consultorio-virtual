@@ -29,8 +29,6 @@ class NotesService {
       const notesRef = collection(database, 'users', userId, 'notes');
       const response = await addDoc(notesRef, noteFormatted);
 
-      console.log('Resposta do create', response);
-
       const newNote: Note = {
         id: response.id,
         title: note.title,
@@ -45,10 +43,14 @@ class NotesService {
     }
   }
 
-  async updateCompleted(userId: string, noteId: string, isCompleted: boolean) {
+  // async updateNote(userId: string, note: Note) {}
+
+  // async deleteNote(userId: string, noteId: string) {}
+
+  async updateCompleted(userId: string, noteId: string, completed: boolean) {
     try {
       const noteRef = doc(database, 'users', userId, 'notes', noteId);
-      await updateDoc(noteRef, { completed: isCompleted });
+      await updateDoc(noteRef, { completed });
     } catch {
       return new Error();
     }
@@ -56,27 +58,3 @@ class NotesService {
 }
 
 export default new NotesService();
-
-
-
-// async function toggleNoteCompleted(note: Note) {
-//   const newStatus = !note.completed;
-
-//   const updatedNotes = notes.map((item) =>
-//     item.id === note.id ? { ...item, completed: newStatus } : item
-//   );
-//   setNotes(updatedNotes);
-
-//   try {
-//     const noteRef = doc(database, 'users', user.id, 'notes', note.id);
-//     await updateDoc(noteRef, { completed: newStatus });
-
-//   } catch {
-//     toast.error('Erro ao atualizar o status da anotação');
-
-//     const updatedNotes = notes.map((item) =>
-//       item.id === note.id ? { ...item, completed: !newStatus } : item
-//     );
-//     setNotes(updatedNotes);
-//   }
-// }

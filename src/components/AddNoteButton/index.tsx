@@ -7,6 +7,8 @@ import { Note } from '../../types/Note';
 import { Button } from '../Button';
 import { Input } from '../Input';
 import { Modal } from '../Modal';
+import { TextArea } from '../TextArea';
+import { Form } from './styles';
 
 interface AddNoteButtonProps {
   onCreate: (note: Note) => void;
@@ -57,16 +59,18 @@ export function AddNoteButton({ onCreate }: AddNoteButtonProps) {
         onCancel={handleCloseModal}
         onConfirm={handleConfirmModal}
       >
-        <form>
+        <Form>
           <Input
+            placeholder='Título da anotação'
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
-          <textarea
+          <TextArea
+            placeholder='Digite a descrição'
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
-        </form>
+        </Form>
       </Modal>
     </>
   );
