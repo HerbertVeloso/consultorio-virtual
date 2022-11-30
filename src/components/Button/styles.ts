@@ -1,7 +1,11 @@
 import styled from 'styled-components';
 
-export const Button = styled.button`
-  background-color: ${({ theme }) => theme.colors.primary};
+interface StyledButtonProps {
+  danger?: boolean
+}
+
+export const StyledButton = styled.button<StyledButtonProps>`
+  background-color: ${({ theme, danger }) => danger ? theme.colors.red : theme.colors.primary};
   padding: 0.75rem 1.5rem;
   border-radius: 0.25rem;
   border: 0;
@@ -17,5 +21,9 @@ export const Button = styled.button`
 
   svg {
     font-size: 1.25rem;
+  }
+
+  &[disabled] {
+    background-color: ${({ theme }) => theme.colors.textNav};
   }
 `;

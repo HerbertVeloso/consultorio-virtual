@@ -1,9 +1,10 @@
 import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
 
 export interface ToPersistenceProps {
+  id?: string;
   title: string;
-  description?: string;
-  completed?: string;
+  description?: string | null;
+  completed?: boolean;
   createdAt?: Date;
 }
 

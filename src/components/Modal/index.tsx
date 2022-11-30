@@ -1,28 +1,22 @@
 /* eslint @typescript-eslint/no-non-null-assertion: 0 */
+import { XCircle } from 'phosphor-react';
 import { ReactNode } from 'react';
 import ReactDOM from 'react-dom';
-import { Button } from '../Button';
 
-import { Actions, Container, Overlay, Title } from './styles';
+import { Container, Header, Overlay, Title } from './styles';
 
 interface ModalProps {
   title: string;
   children?: ReactNode;
   visible: boolean;
-  cancelLabel?: string;
-  confirmLabel?: string;
-  onCancel: () => void;
-  onConfirm: () => void;
+  onClose: () => void;
 }
 
 export function Modal({
   title,
   children,
   visible,
-  cancelLabel = 'Cancelar',
-  confirmLabel = 'Confirmar',
-  onCancel,
-  onConfirm
+  onClose,
 }: ModalProps) {
 
   if (!visible) {
@@ -40,18 +34,17 @@ export function Modal({
   return ReactDOM.createPortal(
     <Overlay>
       <Container>
-        <Title>{title}</Title>
-        {children}
-        <Actions>
+        <Header>
+          <Title>{title}</Title>
           <button
-            className='cancel-button'
+            className='close-button'
             type='button'
-            onClick={onCancel}
+            onClick={onClose}
           >
-            {cancelLabel}
+            <XCircle />
           </button>
-          <Button onClick={onConfirm}>{confirmLabel}</Button>
-        </Actions>
+        </Header>
+        {children}
       </Container>
     </Overlay>,
     container

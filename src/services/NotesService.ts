@@ -1,8 +1,7 @@
-import { addDoc, collection, doc, getDocs, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from 'firebase/firestore';
 import { NewNote, Note } from '../types/Note';
 import { database } from './firebase';
 import NoteMapper from './mappers/NoteMapper';
-
 
 class NotesService {
   async listNotes(userId: string) {
@@ -43,9 +42,27 @@ class NotesService {
     }
   }
 
-  // async updateNote(userId: string, note: Note) {}
+  async updateNote(userId: string, note: Note) {
+    try {
+      const notesRef = doc(database, 'users', userId, 'notes', note.id);
 
-  // async deleteNote(userId: string, noteId: string) {}
+      const noteFormatted = NoteMapper.toPersistence(note);
+      await updateDoc(notesRef, noteFormatted);
+
+      return note;
+    } catch {
+      return new Error();
+    }
+  }
+
+  async deleteNote(userId: string, noteId: string) {
+    try {
+      const noteRef = doc(database, 'users', userId, 'notes', noteId);
+      await deleteDoc(noteRef);
+    } catch {
+      return new Error();
+    }
+  }
 
   async updateCompleted(userId: string, noteId: string, completed: boolean) {
     try {

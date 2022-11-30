@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+
 export const Overlay = styled.div`
   width: 100%;
   height: 100%;
@@ -22,22 +23,27 @@ export const Container = styled.div`
   border-radius: 0.5rem;
 `;
 
+interface TitleProps {
+  danger: boolean
+}
 
-export const Header = styled.div`
+export const Title = styled.h2<TitleProps>`
+  color: ${({ theme, danger }) => danger ? theme.colors.red : theme.colors.black};
+  margin-bottom: 1rem;
+`;
+
+
+export const Actions = styled.div`
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 1.5rem;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 2rem;
 
-  .close-button {
+  .cancel-button {
+    margin-right: 1.5rem;
     border: none;
     background-color: transparent;
-    font-size: 1.5rem;
+    font-size: 1rem;
+
   }
 `;
-
-export const Title = styled.h2`
-  color: ${({ theme }) => theme.colors.black};
-`;
-
-

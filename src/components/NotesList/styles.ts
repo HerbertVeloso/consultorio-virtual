@@ -88,3 +88,18 @@ export const List = styled.ul`
     }
   }
 `;
+
+
+export const Actions = styled.div`
+  display: flex;
+  gap: 0.5rem;
+
+  button {
+    border: none;
+    background-color: transparent;
+
+    svg {
+      font-size: 1.5rem;
+    }
+  }
+`;

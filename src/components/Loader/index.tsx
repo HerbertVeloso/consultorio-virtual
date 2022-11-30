@@ -1,9 +1,10 @@
-import { Container, Spinner } from './styles';
+import { Spinner } from '../Spinner';
+import { Container } from './styles';
 
 export function Loader() {
   return (
     <Container>
-      <Spinner />
+      <Spinner size={64} />
     </Container>
   );
 }

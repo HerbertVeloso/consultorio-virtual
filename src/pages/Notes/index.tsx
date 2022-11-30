@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { AddNoteButton } from '../../components/AddNoteButton';
-import { NotesList } from '../../components/NotesList';
-import { PageHeader } from '../../components/PageHeader';
+
 import { useAuth } from '../../hooks/useAuth';
 import NotesService from '../../services/NotesService';
 import { Note } from '../../types/Note';
+
+import { AddNoteButton } from '../../components/AddNoteButton';
+import { NotesList } from '../../components/NotesList';
+import { PageHeader } from '../../components/PageHeader';
+
 import { Container } from './styles';
 
 export function Notes() {
@@ -28,8 +31,16 @@ export function Notes() {
     })();
   }, []);
 
-  function onCreateNote(note: Note) {
+  function onSaveNote(note: Note) {
     setNotes(prevState => [note, ...prevState]);
+  }
+
+  function onUpdateNote(note: Note) {
+    setNotes(prevState => prevState.map((item) => item.id === note.id ? note : item));
+  }
+
+  function onDeleteNote(id: string) {
+    setNotes(prevState => prevState.filter((note) => note.id !== id));
   }
 
   async function toggleNoteCompleted(note: Note) {
@@ -53,14 +64,18 @@ export function Notes() {
 
   return (
     <>
-      <PageHeader title='Anotações'      >
-        <AddNoteButton onCreate={onCreateNote} />
+      <PageHeader title='Anotações'>
+        <AddNoteButton onSaveNote={onSaveNote} />
       </PageHeader>
       <Container>
-        <NotesList notes={notes} isLoading={isLoading} toggleNoteCompleted={toggleNoteCompleted} />
+        <NotesList
+          notes={notes}
+          isLoading={isLoading}
+          toggleNoteCompleted={toggleNoteCompleted}
+          onUpdateNote={onUpdateNote}
+          onDeleteNote={onDeleteNote}
+        />
       </Container>
-
-
     </>
   );
 }

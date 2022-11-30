@@ -1,15 +1,22 @@
-import { Eye, Pencil, Trash } from 'phosphor-react';
+
 import { Note } from '../../types/Note';
+
 import { Loader } from '../Loader';
-import { EmptyText, List, Title } from './styles';
+import { DeleteNote } from './DeleteNote';
+import { ViewNote } from './ViewNote';
+
+import { EditNote } from './EditNote';
+import { Actions, EmptyText, List, Title } from './styles';
 
 interface NoteListProps {
   notes: Note[];
   isLoading: boolean;
   toggleNoteCompleted(note: Note): void;
+  onUpdateNote(note: Note): void;
+  onDeleteNote(id: string): void;
 }
 
-export function NotesList({ notes, isLoading, toggleNoteCompleted }: NoteListProps) {
+export function NotesList({ notes, isLoading, toggleNoteCompleted, onUpdateNote, onDeleteNote }: NoteListProps) {
   return (
     <>
       <Title>Lista de anotações</Title>
@@ -33,11 +40,11 @@ export function NotesList({ notes, isLoading, toggleNoteCompleted }: NoteListPro
 
                     <p>{note.title}</p>
 
-                    <div>
-                      <Eye weight='bold' />
-                      <Pencil weight="bold" />
-                      <Trash weight='bold' />
-                    </div>
+                    <Actions>
+                      <ViewNote note={note} />
+                      <EditNote note={note} onUpdateNote={onUpdateNote} />
+                      <DeleteNote note={note} onDeleteNote={onDeleteNote} />
+                    </Actions>
                   </li>
                 ))
               )
