@@ -1,13 +1,16 @@
 import { Pencil } from 'phosphor-react';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+
 import { useAuth } from '../../../hooks/useAuth';
 import NotesService from '../../../services/NotesService';
 import { Note } from '../../../types/Note';
+
 import { Button } from '../../Button';
 import { Input } from '../../Input';
 import { Modal } from '../../Modal';
 import { TextArea } from '../../TextArea';
+
 import { Form } from './styles';
 
 interface EditNoteProps {

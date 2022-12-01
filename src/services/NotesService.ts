@@ -14,10 +14,6 @@ class NotesService {
       notes.push(note);
     });
 
-    notes.sort((a, b) =>
-      a.createdAt < b.createdAt ? 1 : a.createdAt > b.createdAt ? -1 : 0
-    );
-
     return notes;
   }
 

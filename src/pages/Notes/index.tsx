@@ -23,6 +23,7 @@ export function Notes() {
       try {
         const notesList = await NotesService.listNotes(user.id);
         setNotes(notesList);
+        orderNotes();
       } catch {
         toast.error('Houve um erro ao buscar as anotações. Tente novamente mais tarde.');
       } finally {
@@ -50,6 +51,7 @@ export function Notes() {
       item.id === note.id ? { ...item, completed: newStatus } : item
     );
     setNotes(updatedNotes);
+    orderNotes();
 
     const response = await NotesService.updateCompleted(user.id, note.id, newStatus);
 
@@ -59,7 +61,26 @@ export function Notes() {
         item.id === note.id ? { ...item, completed: !newStatus } : item
       );
       setNotes(updatedNotes);
+      orderNotes();
     }
+  }
+
+  function orderNotes() {
+    setNotes(prevState => prevState.sort((a, b) => {
+      if (a.completed && b.completed || !a.completed && !b.completed) {
+        return a.createdAt > b.createdAt ? -1 : 1;
+      }
+
+      if (a.completed && !b.completed) {
+        return 1;
+      }
+
+      if (!a.completed && b.completed) {
+        return -1;
+      }
+
+      return 0;
+    }));
   }
 
   return (
