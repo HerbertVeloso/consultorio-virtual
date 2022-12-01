@@ -1,3 +1,4 @@
+import { Checks, Clock, ListBullets } from 'phosphor-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -9,13 +10,22 @@ import { AddNoteButton } from '../../components/AddNoteButton';
 import { NotesList } from '../../components/NotesList';
 import { PageHeader } from '../../components/PageHeader';
 
-import { Container } from './styles';
+import { Box, Container, Overview } from './styles';
 
 export function Notes() {
   const { user } = useAuth();
 
   const [notes, setNotes] = useState<Note[]>([]);
   const [isLoading, setisLoading] = useState(true);
+
+  const overview = notes.reduce((acc, note) => {
+    note.completed ? acc.completed += 1 : acc.pending += 1;
+
+    return acc;
+  }, {
+    pending: 0,
+    completed: 0,
+  });
 
   useEffect(() => {
     (async () => {
@@ -88,6 +98,29 @@ export function Notes() {
       <PageHeader title='Anotações'>
         <AddNoteButton onSaveNote={onSaveNote} />
       </PageHeader>
+      <Overview>
+        <Box>
+          <Clock weight='bold' />
+          <div>
+            <strong>{overview.pending}</strong>
+            <span>Pendentes</span>
+          </div>
+        </Box>
+        <Box>
+          <Checks weight='bold' />
+          <div>
+            <strong>{overview.completed}</strong>
+            <span>Concluídas</span>
+          </div>
+        </Box>
+        <Box>
+          <ListBullets weight='bold' />
+          <strong>{notes.length}</strong>
+          <span>Total</span>
+          <div>
+          </div>
+        </Box>
+      </Overview>
       <Container>
         <NotesList
           notes={notes}

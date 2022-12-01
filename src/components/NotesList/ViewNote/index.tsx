@@ -2,7 +2,7 @@ import { Eye } from 'phosphor-react';
 import { useState } from 'react';
 import { Note } from '../../../types/Note';
 import { Modal } from '../../Modal';
-import { Title } from './styles';
+import { Title, Warning } from './styles';
 
 interface ViewNoteProps {
   note: Note;
@@ -31,7 +31,7 @@ export function ViewNote({ note }: ViewNoteProps) {
       >
         <div>
           <Title>{note.title}</Title>
-          <p>{note.description ? note.description : 'Essa anotação não tem descrição.'}</p>
+          {note.description ? <p>{note.description}</p> : <Warning>Essa anotação não tem descrição.</Warning>}
         </div>
 
       </Modal>

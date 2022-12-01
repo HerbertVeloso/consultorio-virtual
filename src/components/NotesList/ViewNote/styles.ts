@@ -8,7 +8,6 @@ export const Title = styled.p`
   margin-bottom: 0.5rem;
 `;
 
-export const Description = styled.p`
-  font-size: 1.25rem;
-  color: ${({ theme }) => theme.colors.black};
+export const Warning = styled.p`
+  color: ${({ theme }) => theme.colors.red};
 `;

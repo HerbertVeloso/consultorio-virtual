@@ -24,6 +24,9 @@ export default createGlobalStyle`
     font-family: 'Raleway', sans-serif;
     font-weight: 400;
     color: ${(props) => props.theme.colors.text};
+    -webkit-font-feature-settings: "lnum";
+    -moz-font-feature-settings: "lnum";
+    font-feature-settings: "lnum";
 
     transition: color 0.2s;
   }
