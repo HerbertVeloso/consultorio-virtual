@@ -1,66 +1,87 @@
-import { useState } from 'react';
 
 import { Patient } from '../../types/Patient';
+import { formatDate } from '../../utils/formatDate';
+
+import { ErrorMessage } from '../ErrorMessage';
 import { Loader } from '../Loader';
+import { SearchPatients } from '../SearchPatients';
+import { EditPatient } from './EditPatient';
+import { ViewPatient } from './ViewPatient';
 
-import { EmptyText, Table } from './styles';
+import { DeletePatient } from './DeletePatient';
+import { Actions, Container, EmptyText, Header, Item, List, ListHeader, Title } from './styles';
 
-export function PatientsList() {
-  const [patients] = useState<Patient[]>([]);
-  const [isLoading] = useState(false);
+interface PatientsListProps {
+  patients: Patient[];
+  isLoading?: boolean;
+  isError?: boolean;
+  onSearchPatients: (searchTerm: string) => void;
+  onClearSearchPatients: () => void;
+  onUpdatePatient(updatedPatient: Patient): void;
+  onDeletePatient(id: string): void;
+}
 
-  if (isLoading) {
-    return <Loader />;
-  }
+export function PatientsList({
+  patients,
+  isLoading,
+  isError,
+  onSearchPatients,
+  onClearSearchPatients,
+  onUpdatePatient,
+  onDeletePatient
+}: PatientsListProps) {
 
+  return (
+    <Container>
+      <Header>
+        <Title>Lista de Pacientes {patients.length > 0 && `(${patients.length})`}</Title>
+        {!isLoading && !isError && (
+          <SearchPatients
+            onSearchPatients={onSearchPatients}
+            onClearSearchPatients={onClearSearchPatients}
+          />
+        )}
+      </Header>
 
-  return patients.length === -1 ? (
-    <EmptyText>Nenhum paciente cadastrado.</EmptyText>
-  ) : (
-    <Table>
-      <thead>
-        <tr>
-          <th>Nome</th>
-          <th>Telefone</th>
-          <th>Data de nascimento</th>
-          <th>Plano de saúde</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        {patients.map(({ id, name, phone, birthdayFormatted, healthInsurance }) => (
-          <tr key={id}>
-            <td>{name}</td>
-            <td>{phone}</td>
-            <td>{birthdayFormatted}</td>
-            <td>{healthInsurance}</td>
-            <td className="actions">
-              {/* <ActionButton>
-                  <CalendarPlus />
-                </ActionButton>
+      {isLoading && <Loader />}
 
-                <DialogViewPatient patient={patient}>
-                  <ActionButton>
-                    <Eye />
-                  </ActionButton>
-                </DialogViewPatient>
+      {!isLoading && isError && <ErrorMessage>Não foi possível buscar os pacientes no banco de dados. Tente novamente mais tarde.</ErrorMessage>}
 
-                <DialogEditPatient patient={patient}>
-                  <ActionButton>
-                    <PencilLine />
-                  </ActionButton>
-                </DialogEditPatient>
+      {!isLoading && !isError && (
+        patients.length === 0
+          ? <EmptyText>Nenhum paciente cadastrado.</EmptyText>
+          : (
+            <>
+              <ListHeader>
+                <strong>Nome</strong>
+                <strong>Telefone</strong>
+                <strong>Data de nascimento</strong>
+                <strong>Plano de saúde</strong>
+                <strong>Ações</strong>
+              </ListHeader>
+              <List>
+                {
+                  patients.map((patient) => (
+                    <Item key={patient.id}>
+                      <span>{patient.name}</span>
+                      <span>{patient.phone}</span>
+                      <span>{patient.birthday && formatDate(patient.birthday)}</span>
+                      <span>{patient.healthInsurance}</span>
+                      <Actions>
+                        <ViewPatient patient={patient} />
+                        <EditPatient patient={patient} onUpdatePatient={onUpdatePatient} />
+                        <DeletePatient patient={patient} onDeletePatient={onDeletePatient} />
+                        {/* <EditNote note={note} onUpdateNote={onUpdateNote} /> */}
+                        {/* <DeleteNote note={note} onDeleteNote={onDeleteNote} /> */}
+                      </Actions>
+                    </Item>
+                  ))
+                }
+              </List>
+            </>
+          )
+      )}
 
-                <DialogDeletePatient patient={patient}>
-                  <ActionButton>
-                    <Trash />
-                  </ActionButton>
-                </DialogDeletePatient> */}
-            </td>
-          </tr>
-        ))
-        }
-      </tbody>
-    </Table>
+    </Container>
   );
 }

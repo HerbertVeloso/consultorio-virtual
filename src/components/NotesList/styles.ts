@@ -14,7 +14,6 @@ export const List = styled.ul`
 
   li {
     background-color: ${props => props.theme.colors.background};
-    border-radius: 0.5rem;
     padding: 1rem 2rem;
 
     display: flex;
@@ -24,7 +23,7 @@ export const List = styled.ul`
     transition: background-color 0.2s;
 
     & + li {
-      margin-top: 0.5rem;
+      margin-top: 2px;
     }
 
     > label {
@@ -85,6 +84,14 @@ export const List = styled.ul`
       p {
         text-decoration: line-through;
       }
+    }
+
+    &:first-child {
+      border-radius: 1rem 1rem 0 0;
+    }
+
+    &:last-child {
+      border-radius: 0 0 1rem 1rem;
     }
   }
 `;

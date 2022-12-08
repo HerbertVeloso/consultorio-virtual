@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 
 export const Container = styled.header`
+  height: 5rem;
   background-color: ${props => props.theme.colors.shape};
-  padding: 1.5rem 2rem;
+  padding: 0 2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;

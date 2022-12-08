@@ -1,12 +1,17 @@
 import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from 'firebase/firestore';
+import { database } from '../database/firebase';
 import { NewNote, Note } from '../types/Note';
-import { database } from './firebase';
 import NoteMapper from './mappers/NoteMapper';
 
 class NotesService {
-  async listNotes(userId: string) {
+  async list(userId: string) {
     const notesRef = collection(database, 'users', userId, 'notes');
     const querySnapshot = await getDocs(notesRef);
+
+    if (querySnapshot.metadata.fromCache) {
+      throw new Error();
+    }
+
     const notes: Note[] = [];
 
     querySnapshot.forEach((document) => {
@@ -17,56 +22,40 @@ class NotesService {
     return notes;
   }
 
-  async createNote(userId: string, note: NewNote) {
-    try {
-      const noteFormatted = NoteMapper.toPersistence(note);
+  async create(userId: string, note: NewNote) {
+    const noteFormatted = NoteMapper.toPersistence(note);
 
-      const notesRef = collection(database, 'users', userId, 'notes');
-      const response = await addDoc(notesRef, noteFormatted);
+    const notesRef = collection(database, 'users', userId, 'notes');
+    const response = await addDoc(notesRef, noteFormatted);
 
-      const newNote: Note = {
-        id: response.id,
-        title: note.title,
-        description: note.description ?? null,
-        completed: false,
-        createdAt: new Date()
-      };
+    const newNote: Note = {
+      id: response.id,
+      title: note.title,
+      description: note.description,
+      completed: false,
+      createdAt: new Date()
+    };
 
-      return newNote;
-    } catch {
-      return new Error();
-    }
+    return newNote;
   }
 
-  async updateNote(userId: string, note: Note) {
-    try {
-      const notesRef = doc(database, 'users', userId, 'notes', note.id);
+  async update(userId: string, note: Note) {
+    const noteFormatted = NoteMapper.toPersistence(note);
 
-      const noteFormatted = NoteMapper.toPersistence(note);
-      await updateDoc(notesRef, noteFormatted);
+    const noteRef = doc(database, 'users', userId, 'notes', note.id);
+    await updateDoc(noteRef, noteFormatted);
 
-      return note;
-    } catch {
-      return new Error();
-    }
+    return note;
   }
 
-  async deleteNote(userId: string, noteId: string) {
-    try {
-      const noteRef = doc(database, 'users', userId, 'notes', noteId);
-      await deleteDoc(noteRef);
-    } catch {
-      return new Error();
-    }
+  async delete(userId: string, noteId: string) {
+    const noteRef = doc(database, 'users', userId, 'notes', noteId);
+    await deleteDoc(noteRef);
   }
 
-  async updateCompleted(userId: string, noteId: string, completed: boolean) {
-    try {
-      const noteRef = doc(database, 'users', userId, 'notes', noteId);
-      await updateDoc(noteRef, { completed });
-    } catch {
-      return new Error();
-    }
+  async toggleCompleted(userId: string, noteId: string, completed: boolean) {
+    const noteRef = doc(database, 'users', userId, 'notes', noteId);
+    await updateDoc(noteRef, { completed });
   }
 }
 

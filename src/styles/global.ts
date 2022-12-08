@@ -60,4 +60,12 @@ export default createGlobalStyle`
 
     transition: background-color 0.2s;
   }
+
+  button.react-datepicker__navigation {
+    margin-top: 0 !important;
+  }
+
+  .react-datepicker__triangle {
+    transform: translate(24px, 0) !important;
+  }
 `;

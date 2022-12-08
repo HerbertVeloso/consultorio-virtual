@@ -3,8 +3,8 @@ import { createContext, ReactNode, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import { authProvider, firebase } from '../database/firebase';
 import { usePersistedState } from '../hooks/usePersistedState';
-import { authProvider, firebase } from '../services/firebase';
 import { User } from '../types/User';
 
 interface AuthContextData {

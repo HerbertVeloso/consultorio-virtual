@@ -31,6 +31,7 @@ export const UserContainer = styled.div`
 
   img {
     width: 3rem;
+    height: 3rem;
     border-radius: 2rem;
     border: 2px solid ${props => props.theme.colors.secundary};
 

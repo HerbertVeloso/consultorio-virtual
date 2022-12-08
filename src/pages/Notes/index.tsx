@@ -1,40 +1,32 @@
-import { Checks, Clock, ListBullets } from 'phosphor-react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { useAuth } from '../../hooks/useAuth';
 import NotesService from '../../services/NotesService';
 import { Note } from '../../types/Note';
 
-import { AddNoteButton } from '../../components/AddNoteButton';
+import { AddNoteModal } from '../../components/AddNoteModal';
 import { NotesList } from '../../components/NotesList';
 import { PageHeader } from '../../components/PageHeader';
 
-import { Box, Container, Overview } from './styles';
+import { NotesOverview } from '../../components/NotesOverview';
+import { Container } from './styles';
 
 export function Notes() {
-  const { user } = useAuth();
-
   const [notes, setNotes] = useState<Note[]>([]);
   const [isLoading, setisLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
 
-  const overview = notes.reduce((acc, note) => {
-    note.completed ? acc.completed += 1 : acc.pending += 1;
-
-    return acc;
-  }, {
-    pending: 0,
-    completed: 0,
-  });
+  const { user } = useAuth();
 
   useEffect(() => {
     (async () => {
-      setisLoading(true);
       try {
-        const notesList = await NotesService.listNotes(user.id);
-        setNotes(notesList);
-        orderNotes();
+        setisLoading(true);
+        const notesList = await NotesService.list(user.id);
+        setNotes(orderNotes(notesList));
       } catch {
+        setIsError(true);
         toast.error('Houve um erro ao buscar as anotações. Tente novamente mais tarde.');
       } finally {
         setisLoading(false);
@@ -42,41 +34,40 @@ export function Notes() {
     })();
   }, []);
 
-  function onSaveNote(note: Note) {
+  const onSaveNote = useCallback((note: Note) => {
     setNotes(prevState => [note, ...prevState]);
-  }
+  }, [notes]);
 
-  function onUpdateNote(note: Note) {
+  const onUpdateNote = useCallback((note: Note) => {
     setNotes(prevState => prevState.map((item) => item.id === note.id ? note : item));
-  }
+  }, [notes]);
 
   function onDeleteNote(id: string) {
     setNotes(prevState => prevState.filter((note) => note.id !== id));
   }
 
-  async function toggleNoteCompleted(note: Note) {
-    const newStatus = !note.completed;
+  const onToggleNoteCompleted = useCallback(async (note: Note) => {
+    try {
+      const newStatus = !note.completed;
 
-    const updatedNotes = notes.map((item) =>
-      item.id === note.id ? { ...item, completed: newStatus } : item
-    );
-    setNotes(updatedNotes);
-    orderNotes();
-
-    const response = await NotesService.updateCompleted(user.id, note.id, newStatus);
-
-    if (response instanceof Error) {
-      toast.error('Erro ao atualizar o status da anotação');
       const updatedNotes = notes.map((item) =>
-        item.id === note.id ? { ...item, completed: !newStatus } : item
+        item.id === note.id ? { ...item, completed: newStatus } : item
       );
-      setNotes(updatedNotes);
-      orderNotes();
-    }
-  }
+      setNotes(orderNotes(updatedNotes));
 
-  function orderNotes() {
-    setNotes(prevState => prevState.sort((a, b) => {
+      await NotesService.toggleCompleted(user.id, note.id, newStatus);
+    } catch {
+      toast.error('Erro ao atualizar o status da anotação');
+
+      const updatedNotes = notes.map((item) =>
+        item.id === note.id ? note : item
+      );
+      setNotes(orderNotes(updatedNotes));
+    }
+  }, [notes]);
+
+  function orderNotes(notes: Note[]) {
+    return notes.sort((a, b) => {
       if (a.completed && b.completed || !a.completed && !b.completed) {
         return a.createdAt > b.createdAt ? -1 : 1;
       }
@@ -90,42 +81,21 @@ export function Notes() {
       }
 
       return 0;
-    }));
+    });
   }
 
   return (
     <>
       <PageHeader title='Anotações'>
-        <AddNoteButton onSaveNote={onSaveNote} />
+        <AddNoteModal onSaveNote={onSaveNote} />
       </PageHeader>
-      <Overview>
-        <Box>
-          <Clock weight='bold' />
-          <div>
-            <strong>{overview.pending}</strong>
-            <span>Pendentes</span>
-          </div>
-        </Box>
-        <Box>
-          <Checks weight='bold' />
-          <div>
-            <strong>{overview.completed}</strong>
-            <span>Concluídas</span>
-          </div>
-        </Box>
-        <Box>
-          <ListBullets weight='bold' />
-          <strong>{notes.length}</strong>
-          <span>Total</span>
-          <div>
-          </div>
-        </Box>
-      </Overview>
+      <NotesOverview notes={notes} />
       <Container>
         <NotesList
           notes={notes}
           isLoading={isLoading}
-          toggleNoteCompleted={toggleNoteCompleted}
+          isError={isError}
+          onToggleNoteCompleted={onToggleNoteCompleted}
           onUpdateNote={onUpdateNote}
           onDeleteNote={onDeleteNote}
         />

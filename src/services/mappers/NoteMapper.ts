@@ -3,7 +3,7 @@ import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
 export interface ToPersistenceProps {
   id?: string;
   title: string;
-  description?: string | null;
+  description?: string;
   completed?: boolean;
   createdAt?: Date;
 }

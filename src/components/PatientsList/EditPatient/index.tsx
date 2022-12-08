@@ -3,18 +3,18 @@ import { useCallback, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { useAuth } from '../../../hooks/useAuth';
-import NotesService from '../../../services/NotesService';
-import { NewNote, Note } from '../../../types/Note';
+import PatientsService from '../../../services/PatientsService';
+import { NewPatient, Patient } from '../../../types/Patient';
 
 import { Modal } from '../../Modal';
-import { NoteForm } from '../../NoteForm';
+import { PatientForm } from '../../PatientForm';
 
-interface EditNoteProps {
-  note: Note;
-  onUpdateNote(note: Note): void;
+interface EditPatientProps {
+  patient: Patient;
+  onUpdatePatient(updatedPatient: Patient): void;
 }
 
-export function EditNote({ note, onUpdateNote }: EditNoteProps) {
+export function EditPatient({ patient, onUpdatePatient }: EditPatientProps) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isErrorSubmitting, setIsErrorSubmitting] = useState(false);
@@ -30,43 +30,44 @@ export function EditNote({ note, onUpdateNote }: EditNoteProps) {
     setIsErrorSubmitting(false);
   }, [isModalVisible]);
 
-  const onSubmit = useCallback(async (updatedNote: NewNote) => {
+  const onSubmit = useCallback(async (updatedPatient: NewPatient) => {
     try {
       setIsSubmitting(true);
 
-      const formattedNote: Note = {
-        ...note,
-        ...updatedNote
+      const formattedPatient: Patient = {
+        ...patient,
+        ...updatedPatient
       };
 
-      const responseData = await NotesService.update(user.id, formattedNote);
-      onUpdateNote(responseData);
+      const responseData = await PatientsService.update(user.id, formattedPatient);
+      onUpdatePatient(responseData);
 
-      toast.success('Anotação editada com sucesso!');
+      toast.success('Paciente editado com sucesso!');
       onCloseModal();
     } catch {
-      toast.error('Houve um erro ao editar sua anotação. Tente novamente mais tarde.');
+      toast.error('Houve um erro ao editar o paciente. Tente novamente mais tarde.');
       setIsErrorSubmitting(true);
     } finally {
       setIsSubmitting(false);
     }
-  }, [isModalVisible, isSubmitting]);
+  }, [isModalVisible]);
 
   return (
     <>
       <button type='button' onClick={handleOpenModal}>
         <Pencil weight='bold' />
       </button>
+
       <Modal
-        title='Editar anotação'
+        title='Editar paciente'
         visible={isModalVisible}
         onClose={onCloseModal}
       >
-        <NoteForm
-          note={note}
-          buttonLabel='Editar anotação'
-          onSubmit={onSubmit}
+        <PatientForm
+          patient={patient}
+          buttonLabel='Editar paciente'
           isSubmitting={isSubmitting}
+          onSubmit={onSubmit}
           isErrorSubmitting={isErrorSubmitting}
         />
       </Modal>

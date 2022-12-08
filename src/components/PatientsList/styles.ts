@@ -1,76 +1,66 @@
 import styled from 'styled-components';
 
+export const Container = styled.div``;
+
+export const Header = styled.header`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+`;
+
+export const Title = styled.h2`
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+`;
+
 export const EmptyText = styled.p`
   text-align: center;
 `;
 
 
-export const Table = styled.table`
-width: 100%;
-border-collapse: collapse;
+export const ListHeader = styled.header`
+  display: grid;
+  grid-template-columns: 1fr 8rem 10rem 1fr 6rem;
+  gap: 2rem;
+  padding: 1rem;
 
-th {
-  padding: 1rem 2rem;
-  text-align: left;
-  font-size: 1rem;
-  color: ${(props) => props.theme.colors.textNav};
-  transition: all 0.2s;
-
-  &:last-child {
-    width: 12.75rem;
+  strong {
+    font-size: 1rem;
+    color: ${({ theme }) => theme.colors.textNav};
+    transition: all 0.2s;
   }
-}
-
-tbody {
-  tr {
-    td {
-      background: ${(props) => props.theme.colors.background};
-      border-bottom: 2px solid ${(props) => props.theme.colors.shape};
-      color: ${(props) => props.theme.colors.text};
-      padding: 1rem 2rem;
-
-      transition: all 0.2s;
-
-      &.actions {
-        display: flex;
-        gap: 0.25rem;
-        width: 12.75rem;
-      }
-    }
-
-    &:first-child {
-      td:first-child {
-        border-radius: 1rem 0 0 0;
-      }
-
-      td:last-child {
-        border-radius: 0 1rem 0 0;
-      }
-    }
-
-    &:last-child {
-      td:first-child {
-        border-radius: 0 0 0 1rem;
-      }
-
-      td:last-child {
-        border-radius: 0 0 1rem 0;
-      }
-    }
-  }
-}
 `;
 
-export const ActionButton = styled.button`
-padding: 0.25rem;
-font-size: 1.5rem;
-color: ${(props) => props.theme.colors.text};
-background-color: transparent;
-border: 0;
+export const List = styled.ul`
+  list-style: none;
+`;
 
-transition: color 0.2s;
+export const Item = styled.li`
+  display: grid;
+  grid-template-columns: 1fr 8rem 10rem 1fr 6rem;
+  gap: 2rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
 
-&:hover {
-  color: ${(props) => props.theme.colors.title};
-}
+  &:nth-child(odd) {
+    background-color: ${({ theme }) => theme.colors.background};
+  }
+
+  strong {
+    text-align: center;
+  }
+`;
+
+export const Actions = styled.div`
+  display: flex;
+  gap: 0.5rem;
+
+  button {
+    border: none;
+    background-color: transparent;
+
+    svg {
+      font-size: 1.5rem;
+    }
+  }
 `;

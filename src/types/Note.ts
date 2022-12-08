@@ -1,12 +1,9 @@
 export interface Note {
   id: string;
   title: string;
-  description: string | null;
+  description?: string;
   completed: boolean;
   createdAt: Date;
 }
 
-export interface NewNote {
-  title: string;
-  description?: string;
-}
+export type NewNote = Pick<Note, 'title' | 'description'>;

@@ -3,17 +3,17 @@ import { useCallback, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { useAuth } from '../../../hooks/useAuth';
-import NotesService from '../../../services/NotesService';
-import { Note } from '../../../types/Note';
+import PatientsService from '../../../services/PatientsService';
+import { Patient } from '../../../types/Patient';
 
 import { Dialog } from '../../Dialog';
 
-interface DeleteNoteProps {
-  note: Note;
-  onDeleteNote(id: string): void;
+interface DeletePatientProps {
+  patient: Patient;
+  onDeletePatient(id: string): void;
 }
 
-export function DeleteNote({ note, onDeleteNote }: DeleteNoteProps) {
+export function DeletePatient({ patient, onDeletePatient }: DeletePatientProps) {
   const [isDialogVisible, setIsDialogVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -27,16 +27,17 @@ export function DeleteNote({ note, onDeleteNote }: DeleteNoteProps) {
     setIsDialogVisible(false);
   }, [isDialogVisible]);
 
-  const handleDeleteNote = useCallback(async () => {
+
+  const handleDeletePatient = useCallback(async () => {
     try {
       setIsSubmitting(true);
 
-      await NotesService.delete(user.id, note.id);
-      onDeleteNote(note.id);
+      await PatientsService.delete(user.id, patient.id);
+      onDeletePatient(patient.id);
 
-      toast.success('Anotação excluída com sucesso!');
+      toast.success('Paciente excluído com sucesso!');
     } catch {
-      toast.error('Houve um erro ao excluir sua anotação. Tente novamente mais tarde.');
+      toast.error('Houve um erro ao excluir o paciente. Tente novamente mais tarde.');
     } finally {
       setIsSubmitting(false);
       setIsDialogVisible(false);
@@ -50,11 +51,11 @@ export function DeleteNote({ note, onDeleteNote }: DeleteNoteProps) {
       </button>
 
       <Dialog
-        title={`Deseja realmente excluir a anotação: "${note.title}"?`}
+        title={`Deseja realmente excluir o paciente: "${patient.name}"?`}
         visible={isDialogVisible}
-        confirmLabel='Deletar'
+        confirmLabel='Excluir'
         onCancel={onCloseDialog}
-        onConfirm={handleDeleteNote}
+        onConfirm={handleDeletePatient}
         buttonIsLoading={isSubmitting}
         danger
       >
